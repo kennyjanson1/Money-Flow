@@ -18,12 +18,12 @@
     <!-- Legends -->
     <div class="flex items-center gap-6 mb-6">
         <div class="flex items-center gap-2">
-            <div class="w-3 h-3 bg-indigo-600 rounded"></div>
+            <div class="w-3 h-3 bg-green-500 rounded"></div>
             <span class="text-sm text-slate-600 dark:text-slate-400">Income</span>
         </div>
 
         <div class="flex items-center gap-2">
-            <div class="w-3 h-3 bg-cyan-400 rounded"></div>
+            <div class="w-3 h-3 bg-red-500 rounded"></div>
             <span class="text-sm text-slate-600 dark:text-slate-400">Expenses</span>
         </div>
     </div>
@@ -57,14 +57,16 @@
                     datasets: [{
                             label: 'Income',
                             data: income,
-                            backgroundColor: '#6366f1',
+                            backgroundColor: '#10b981', // Green-500
+                            hoverBackgroundColor: '#059669', // Green-600 (darker on hover)
                             borderRadius: 6,
                             barThickness: 20
                         },
                         {
                             label: 'Expenses',
                             data: expenses,
-                            backgroundColor: '#22d3ee',
+                            backgroundColor: '#ef4444', // Red-500
+                            hoverBackgroundColor: '#dc2626', // Red-600 (darker on hover)
                             borderRadius: 6,
                             barThickness: 20
                         }
@@ -73,14 +75,29 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
                         legend: {
                             display: false
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 13,
+                                weight: '600'
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
                             callbacks: {
                                 label: function(context) {
-                                    return 'Rp ' + context.raw.toLocaleString('id-ID');
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.y;
+                                    return label + ': Rp ' + value.toLocaleString('id-ID');
                                 }
                             }
                         }
@@ -89,13 +106,31 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'Rp ' + value.toLocaleString('id-ID')
+                                color: '#94a3b8',
+                                font: {
+                                    size: 11
+                                },
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                                    } else if (value >= 1000) {
+                                        return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                                    }
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }
                             },
                             grid: {
-                                color: 'rgba(148,163,184,0.15)'
+                                color: 'rgba(148,163,184,0.15)',
+                                drawBorder: false
                             }
                         },
                         x: {
+                            ticks: {
+                                color: '#94a3b8',
+                                font: {
+                                    size: 11
+                                }
+                            },
                             grid: {
                                 display: false
                             }

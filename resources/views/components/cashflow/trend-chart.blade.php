@@ -24,6 +24,8 @@
         
         $trendData[] = [
             'month' => $date->format('M'),
+            'income' => $income,
+            'expense' => $expense,
             'net' => $income - $expense,
         ];
     }
@@ -54,29 +56,62 @@
         type: 'line',
         data: {
             labels: trendData.map(d => d.month),
-            datasets: [{
-                label: 'Net Cash Flow',
-                data: trendData.map(d => d.net),
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 2,
-                pointRadius: 4,
-                pointBackgroundColor: '#10b981',
-            }]
+            datasets: [
+                {
+                    label: 'Income',
+                    data: trendData.map(d => d.income),
+                    borderColor: '#10b981', // Green-500
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                },
+                {
+                    label: 'Expense',
+                    data: trendData.map(d => d.expense),
+                    borderColor: '#ef4444', // Red-500
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ef4444',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: getComputedStyle(document.documentElement).getPropertyValue('color') || '#64748b',
+                        usePointStyle: true,
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
                 },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return 'Net: Rp ' + context.parsed.y.toLocaleString('id-ID');
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y;
+                            return label + ': Rp ' + value.toLocaleString('id-ID');
                         }
                     }
                 }
@@ -84,20 +119,33 @@
             scales: {
                 x: {
                     grid: {
-                        color: '#e2e8f0'
+                        color: '#e2e8f0',
+                        drawBorder: false,
                     },
                     ticks: {
-                        color: '#94a3b8'
+                        color: '#94a3b8',
+                        font: {
+                            size: 11
+                        }
                     }
                 },
                 y: {
                     grid: {
-                        color: '#e2e8f0'
+                        color: '#e2e8f0',
+                        drawBorder: false,
                     },
                     ticks: {
                         color: '#94a3b8',
+                        font: {
+                            size: 11
+                        },
                         callback: function(value) {
-                            return 'Rp ' + (value / 1000).toFixed(0) + 'k';
+                            if (value >= 1000000) {
+                                return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                            } else if (value >= 1000) {
+                                return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                            }
+                            return 'Rp ' + value.toLocaleString('id-ID');
                         }
                     }
                 }
