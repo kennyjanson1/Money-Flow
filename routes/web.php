@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\GetHelpController;
+use App\Http\Controllers\CashflowController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SavingsTransactionController;
-use App\Http\Controllers\CashflowController;
 
 
 
@@ -28,6 +29,9 @@ Route::middleware('auth')->group(function () {
     
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/gethelp', [GetHelpController::class, 'index'])->name('gethelp');
+    Route::post('/gethelp/contact', [GetHelpController::class, 'contact'])->name('gethelp.contact');
     
     /*
     |--------------------------------------------------------------------------
