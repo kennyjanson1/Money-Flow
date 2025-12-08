@@ -9,7 +9,7 @@ use App\Http\Controllers\CashflowController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\SavingsTransactionController;
+use App\Http\Controllers\SavingsPlanController;
 
 
 
@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
     
     /*
     |--------------------------------------------------------------------------
@@ -91,10 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::post('goals/{savingsPlan}/complete', [GoalsController::class, 'complete'])->name('goals.complete');
     Route::post('goals/{savingsPlan}/cancel', [GoalsController::class, 'cancel'])->name('goals.cancel');
     
-    // Goals Transactions (deposit/withdraw)
-    Route::post('goals/{savingsPlan}/transactions', [SavingsTransactionController::class, 'store'])->name('goals.transactions.store');
-    Route::delete('goals-transactions/{savingsTransaction}', [SavingsTransactionController::class, 'destroy'])->name('goals.transactions.destroy');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Account Management (Components)
@@ -104,4 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/account', [AccountController::class, 'update'])->name('account.update');
     Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
     Route::delete('/account', [AccountController::class, 'destroy'])->name('account.destroy');
+
+    Route::resource('savings', SavingsPlanController::class);
 });
+
+

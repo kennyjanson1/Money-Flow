@@ -109,6 +109,7 @@ class TransactionController extends Controller
 
     public function storeBulk(Request $request)
     {
+
         $request->validate([
             'transactions' => 'required|array|min:1',
             'transactions.*.category_id' => 'required|exists:categories,id',
@@ -250,4 +251,6 @@ class TransactionController extends Controller
 
         return view('transactions.trash', compact('transactions'));
     }
+
+    
 }

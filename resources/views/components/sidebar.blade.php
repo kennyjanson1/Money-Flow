@@ -6,8 +6,9 @@
     <div class="flex items-center justify-between mb-10 flex-shrink-0">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <div class="w-4 h-4 bg-white rounded"></div>
+                <img src="{{ asset('images/logo-casholve.png') }}" alt="Logo" class="w-8 h-8 object-contain">
             </div>
+
             <h1 class="text-xl font-medium text-slate-900 dark:text-slate-100">Casholve</h1>
         </div>
         <button 

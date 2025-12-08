@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Delete Account - Moneta')
+@section('title', 'Delete Account - Casholve')
 
 @section('content')
 <div class="max-w-2xl mx-auto">

@@ -35,16 +35,6 @@
                 class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2 text-sm font-medium">
                 Add Transaction
             </a>
-
-            <button
-                class="border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm
-                font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50
-                dark:hover:bg-slate-800 flex items-center gap-1">
-                This Month
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -52,12 +42,11 @@
     <div class="grid grid-cols-2 gap-4">
 
         {{-- INCOME --}}
-        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-start gap-3">
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 flex items-start gap-3">
             <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                <!-- Icon -->
+                <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                 </svg>
             </div>
 
@@ -69,17 +58,16 @@
                 </p>
 
                 @if ($incomeChange != 0)
-                    <span
-                        class="flex items-center gap-1 text-xs {{ $incomeChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            @if ($incomeChange >= 0)
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            @else
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                            @endif
-                        </svg>
+                    <span class="flex items-center gap-1 text-xs {{ $incomeChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
+                        @if ($incomeChange >= 0)
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                            </svg>
+                        @else
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        @endif
                         {{ abs(number_format($incomeChange, 1)) }}%
                     </span>
                 @endif

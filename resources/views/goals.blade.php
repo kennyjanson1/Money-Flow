@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Goals - Moneta')
+@section('title', 'Goals - Casholve')
 
 @section('content')
 <div class="space-y-6">

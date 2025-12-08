@@ -13,78 +13,144 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $userId = $user->id;
 
         // Total Summary
-        $totalIncome = Transaction::where('user_id', $user->id)
-            ->income()
-            ->sum('amount');
-
-        $totalExpense = Transaction::where('user_id', $user->id)
-            ->expense()
-            ->sum('amount');
-
+        $totalIncome = Transaction::where('user_id', $userId)->income()->sum('amount');
+        $totalExpense = Transaction::where('user_id', $userId)->expense()->sum('amount');
         $totalBalance = $totalIncome - $totalExpense;
 
-        // Cashflow (last 30 days)
-        $startDate = now()->subDays(29)->startOfDay();
-        $endDate   = now()->endOfDay();
+  
+        /*
+        |--------------------------------------------------------------------------
+        | DYNAMIC CASHFLOW (THIS YEAR / THIS WEEK / THIS MONTH - FULL MONTH)
+        |--------------------------------------------------------------------------
+        */
+        $range = request('range', 'this_month');
+        $cashflowLabels = [];
+        $cashflowIncome = [];
+        $cashflowExpense = [];
 
-        $cashflowData = Transaction::select(
-            DB::raw('DATE(date) as day'),
-            DB::raw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income"),
-            DB::raw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
-        )
-            ->where('user_id', $user->id)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->groupBy(DB::raw('DATE(date)'))
-            ->orderBy('day')
-            ->get();
+        $today = now();
 
-        // Siapkan array kosong 30 hari
-        $labels = [];
-        $incomeData = [];
-        $expenseData = [];
+        if ($range === 'this_year') {
+            // LAST 12 MONTHS (from 11 months ago -> this month)
+            for ($i = 11; $i >= 0; $i--) {
+                $monthDate = $today->copy()->subMonths($i);
 
-        for ($i = 0; $i < 30; $i++) {
-            $date = $startDate->copy()->addDays($i)->format('Y-m-d');
+                $cashflowLabels[] = $monthDate->format('M Y');
 
-            $labels[] = $date;
+                $cashflowIncome[] = Transaction::where('user_id', $userId)
+                    ->income()
+                    ->whereYear('date', $monthDate->year)
+                    ->whereMonth('date', $monthDate->month)
+                    ->sum('amount');
 
-            $record = $cashflowData->firstWhere('day', $date);
-
-            $incomeData[] = $record ? (float) $record->income : 0;
-            $expenseData[] = $record ? (float) $record->expense : 0;
+                $cashflowExpense[] = Transaction::where('user_id', $userId)
+                    ->expense()
+                    ->whereYear('date', $monthDate->year)
+                    ->whereMonth('date', $monthDate->month)
+                    ->sum('amount');
+            }
         }
 
-        // Category Spending
+        elseif ($range === 'this_week') {
+            // LAST 7 DAYS (label: Mon (09 Dec))
+            for ($i = 6; $i >= 0; $i--) {
+                $day = $today->copy()->subDays($i);
+
+                $cashflowLabels[] = $day->format('D (d M)');
+
+                $cashflowIncome[] = Transaction::where('user_id', $userId)
+                    ->income()
+                    ->whereDate('date', $day->toDateString())
+                    ->sum('amount');
+
+                $cashflowExpense[] = Transaction::where('user_id', $userId)
+                    ->expense()
+                    ->whereDate('date', $day->toDateString())
+                    ->sum('amount');
+            }
+        }
+
+        else {
+            // THIS MONTH -> FULL MONTH (1 .. endOfMonth)
+            $startOfMonth = $today->copy()->startOfMonth();
+            $endOfMonth = $today->copy()->endOfMonth();
+
+            $days = $startOfMonth->diffInDays($endOfMonth); // e.g. 30 for 31-day month (0..30)
+
+            for ($i = 0; $i <= $days; $i++) {
+                $date = $startOfMonth->copy()->addDays($i);
+
+                // LABEL: 01 Dec, 02 Dec, ...
+                $cashflowLabels[] = $date->format('d M');
+
+                $cashflowIncome[] = Transaction::where('user_id', $userId)
+                    ->income()
+                    ->whereDate('date', $date->toDateString())
+                    ->sum('amount');
+
+                $cashflowExpense[] = Transaction::where('user_id', $userId)
+                    ->expense()
+                    ->whereDate('date', $date->toDateString())
+                    ->sum('amount');
+            }
+        }
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CATEGORY SPENDING
+        |--------------------------------------------------------------------------
+        */
+        $range = request('range', 'this_month'); // default this month
+
+        // Tentukan tanggal awal & akhir berdasarkan range
+        if ($range === 'this_week') {
+            $startDate = Carbon::now()->subDays(6)->startOfDay();
+            $endDate   = Carbon::now()->endOfDay();
+        } elseif ($range === 'this_year') {
+            $startDate = Carbon::now()->startOfYear();
+            $endDate   = Carbon::now()->endOfYear();
+        } else {
+            // default this month
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate   = Carbon::now()->endOfMonth();
+        }
+
+        // Query
         $categorySpending = Transaction::select(
-            'categories.name as category',
-            DB::raw('SUM(transactions.amount) as total')
-        )
+                'categories.name as category',
+                DB::raw('SUM(transactions.amount) as total'),
+                'categories.color'
+            )
             ->join('categories', 'transactions.category_id', '=', 'categories.id')
-            ->where('transactions.user_id', $user->id)
-            ->where('transactions.type', 'expense')
-            ->whereMonth('transactions.date', now()->month)
-            ->whereYear('transactions.date', now()->year)
-            ->groupBy('categories.name')
+            ->where('transactions.user_id', $userId)
+            ->where('transactions.type', 'expense') // hanya expense
+            ->whereBetween('transactions.date', [$startDate, $endDate])
+            ->groupBy('categories.name', 'categories.color')
             ->orderByDesc('total')
             ->get();
 
         // Recent Transactions
         $recentTransactions = Transaction::with('category')
-            ->where('user_id', $user->id)
+            ->where('user_id', $userId)
             ->latest('date')
             ->take(10)
             ->get();
 
-        // Savings Summary
-        // Savings Summary
-        $savingsSummary = SavingsPlan::where('user_id', $user->id)
+        /*
+        |--------------------------------------------------------------------------
+        | Savings Summary
+        |--------------------------------------------------------------------------
+        */
+        $savingsSummary = SavingsPlan::where('user_id', $userId)
             ->get()
-            ->map(function ($plan) use ($user) {
+            ->map(function ($plan) {
 
-                $totalSaved = Transaction::where('user_id', $user->id)
-                    ->where('savings_plan_id', $plan->id)
+                $totalSaved = $plan->savingsTransactions()
                     ->sum('amount');
 
                 return [
@@ -93,23 +159,28 @@ class DashboardController extends Controller
                     'saved'    => (float) $totalSaved,
                     'progress' => $plan->target_amount > 0
                         ? round(($totalSaved / $plan->target_amount) * 100, 2)
-                        : 0
+                        : 0,
                 ];
             });
 
 
-        // Month Comparison
+
+        /*
+        |--------------------------------------------------------------------------
+        | MONTH COMPARISON
+        |--------------------------------------------------------------------------
+        */
         $startOfMonth = now()->startOfMonth();
         $endOfMonth   = now()->endOfMonth();
 
         $currentMonth = Carbon::now()->format('F Y');
 
-        $currentIncome = Transaction::where('user_id', $user->id)
+        $currentIncome = Transaction::where('user_id', $userId)
             ->income()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
-        $currentExpense = Transaction::where('user_id', $user->id)
+        $currentExpense = Transaction::where('user_id', $userId)
             ->expense()
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
@@ -120,12 +191,12 @@ class DashboardController extends Controller
         $prevMonthStart = now()->subMonth()->startOfMonth();
         $prevMonthEnd   = now()->subMonth()->endOfMonth();
 
-        $prevIncome = Transaction::where('user_id', $user->id)
+        $prevIncome = Transaction::where('user_id', $userId)
             ->income()
             ->whereBetween('date', [$prevMonthStart, $prevMonthEnd])
             ->sum('amount');
 
-        $prevExpense = Transaction::where('user_id', $user->id)
+        $prevExpense = Transaction::where('user_id', $userId)
             ->expense()
             ->whereBetween('date', [$prevMonthStart, $prevMonthEnd])
             ->sum('amount');
@@ -145,66 +216,35 @@ class DashboardController extends Controller
             ? (($currentExpense - $prevExpense) / abs($prevExpense)) * 100
             : 0;
 
-        $startOfYear = Carbon::now()->startOfYear();
-        $endOfYear   = Carbon::now()->endOfYear();
-
-        $months = [];
-        $monthlyIncome = [];
-        $monthlyExpenses = [];
-
-        for ($i = 1; $i <= 12; $i++) {
-
-            $monthName = Carbon::create()->month($i)->format('M');
-            $months[] = $monthName;
-
-            $income = Transaction::where('user_id', auth()->id())
-                ->income()
-                ->whereYear('date', now()->year)
-                ->whereMonth('date', $i)
-                ->sum('amount');
-
-            $expense = Transaction::where('user_id', auth()->id())
-                ->expense()
-                ->whereYear('date', now()->year)
-                ->whereMonth('date', $i)
-                ->sum('amount');
-
-            $monthlyIncome[] = $income;
-            $monthlyExpenses[] = $expense;
-        }
-
         // Recent Transactions
         $transactions = Transaction::with('category')
-            ->where('user_id', Auth::id())
+            ->where('user_id', $userId)
             ->recent(10)
             ->get();
 
-        // Return Data
         return view('dashboard', [
             'totalBalance'       => $totalBalance,
             'totalIncome'        => $totalIncome,
-            'totalExpense'        => $totalExpense,
+            'totalExpense'       => $totalExpense,
 
-            'cashflowLabels'     => $labels,
-            'cashflowIncome'     => $incomeData,
-            'cashflowExpense'    => $expenseData,
+            // NOTE: Cashflow Data
+            'months'            => $cashflowLabels,
+            'monthlyIncome'     => $cashflowIncome,
+            'monthlyExpenses'   => $cashflowExpense,
 
             'categorySpending'   => $categorySpending,
             'recentTransactions' => $recentTransactions,
-            'savingsSummary'      => $savingsSummary,
+            'savingsSummary'     => $savingsSummary,
 
-            'currentMonth' => $currentMonth,
-            'currentBalance' => $currentBalance,
-            'currentIncome'  => $currentIncome,
-            'currentExpense' => $currentExpense,
-            'balanceChange'  => $balanceChange,
-            'incomeChange'   => $incomeChange,
-            'expenseChange'  => $expenseChange,
+            'currentMonth'    => $currentMonth,
+            'currentBalance'  => $currentBalance,
+            'currentIncome'   => $currentIncome,
+            'currentExpense'  => $currentExpense,
+            'balanceChange'   => $balanceChange,
+            'incomeChange'    => $incomeChange,
+            'expenseChange'   => $expenseChange,
 
             'transactions' => $transactions,
-            'months' => $months,
-            'monthlyIncome' => $monthlyIncome,
-            'monthlyExpenses' => $monthlyExpenses,
         ]);
     }
 }

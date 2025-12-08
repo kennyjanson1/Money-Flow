@@ -4,6 +4,7 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto space-y-6">
+
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div>
@@ -23,10 +24,13 @@
             @csrf
 
             <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-6 bg-white dark:bg-slate-900">
+
                 <!-- Transactions Container -->
                 <div id="transactionsContainer" class="space-y-6">
-                    <!-- Transaction Item Template (will be cloned by JS) -->
+
+                    <!-- Transaction Item Template -->
                     <div class="transaction-item border border-slate-200 dark:border-slate-700 rounded-xl p-4 relative">
+
                         <button type="button"
                             class="remove-transaction absolute top-4 right-4 text-red-500 hover:text-red-700 hidden">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,10 +41,10 @@
                         </button>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                             <!-- Type -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Type
-                                    *</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Type *</label>
                                 <select name="transactions[0][type]"
                                     class="transaction-type w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     required>
@@ -52,26 +56,17 @@
 
                             <!-- Category -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Category
-                                    *</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Category *</label>
                                 <select name="transactions[0][category_id]"
                                     class="category-select w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    required>
+                                    required disabled>
                                     <option value="">Select category</option>
-
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">
-                                            {{ $category->icon ?? '' }} {{ $category->name }}
-                                        </option>
-                                    @endforeach
-
                                 </select>
                             </div>
 
                             <!-- Title -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Title
-                                    *</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Title *</label>
                                 <input type="text" name="transactions[0][title]" placeholder="e.g., Lunch at restaurant"
                                     class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     required>
@@ -79,8 +74,7 @@
 
                             <!-- Amount -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount
-                                    *</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount *</label>
                                 <input type="number" name="transactions[0][amount]" step="0.01" min="0"
                                     placeholder="0.00"
                                     class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -89,8 +83,7 @@
 
                             <!-- Date -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Date
-                                    *</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Date *</label>
                                 <input type="date" name="transactions[0][date]" value="{{ date('Y-m-d') }}"
                                     class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     required>
@@ -98,8 +91,7 @@
 
                             <!-- Description -->
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Description
-                                    (Optional)</label>
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Description (Optional)</label>
                                 <textarea name="transactions[0][description]" rows="2" placeholder="Add notes..."
                                     class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                             </div>
@@ -132,63 +124,92 @@
         </form>
     </div>
 
-    @push('scripts')
-        <script>
-            // Categories data from backend
+@push('scripts')
+<script>
+    // ---------------------------
+    // CATEGORY OPTIONS FROM DATABASE
+    // ---------------------------
 
-            let transactionCount = 1;
+    // Semua kategori dari DB dikirim dari controller
+    const allCategories = @json($categories);
 
-            // Add transaction button
-            document.getElementById('addTransactionBtn').addEventListener('click', function() {
-                const container = document.getElementById('transactionsContainer');
-                const template = container.querySelector('.transaction-item').cloneNode(true);
+    // Filter kategori berdasarkan type
+    function getCategoriesByType(type) {
+        return allCategories.filter(cat => cat.type === type);
+    }
 
-                // Update indices
-                template.querySelectorAll('[name]').forEach(input => {
-                    const name = input.getAttribute('name');
-                    input.setAttribute('name', name.replace(/\[\d+\]/, `[${transactionCount}]`));
+    // Function to update category dropdown based on selected type
+    function updateCategoryOptions(container) {
+        const typeSelect = container.querySelector('.transaction-type');
+        const categorySelect = container.querySelector('.category-select');
 
-                    // Reset values
-                    if (input.tagName === 'SELECT') {
-                        input.selectedIndex = 0;
-                    } else if (input.type !== 'date') {
-                        input.value = '';
-                    }
-                });
+        typeSelect.addEventListener('change', function () {
+            const type = this.value;
 
-                // Show remove button
-                template.querySelector('.remove-transaction').classList.remove('hidden');
+            categorySelect.innerHTML = '<option value="">Select category</option>';
+            categorySelect.disabled = true;
 
-                container.appendChild(template);
-                transactionCount++;
+            if (!type) return;
 
-                // Update category options for new item
-                updateCategoryOptions(template);
+            const list = getCategoriesByType(type);
+
+            list.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.name;
+                categorySelect.appendChild(opt);
             });
 
-            // Remove transaction
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.remove-transaction')) {
-                    const item = e.target.closest('.transaction-item');
-                    if (document.querySelectorAll('.transaction-item').length > 1) {
-                        item.remove();
-                        reindexTransactions();
-                    } else {
-                        alert('You must have at least one transaction');
-                    }
-                }
-            });
+            categorySelect.disabled = false;
+        });
+    }
 
-            function reindexTransactions() {
-                const items = document.querySelectorAll('.transaction-item');
-                items.forEach((item, index) => {
-                    item.querySelectorAll('[name]').forEach(input => {
-                        const name = input.getAttribute('name');
-                        input.setAttribute('name', name.replace(/\[\d+\]/, `[${index}]`));
-                    });
-                });
-                transactionCount = items.length;
+    // Initialize first transaction block
+    updateCategoryOptions(document.querySelector('.transaction-item'));
+
+    // CLONING SYSTEM
+    let transactionCount = 1;
+
+    document.getElementById('addTransactionBtn').addEventListener('click', function() {
+        const container = document.getElementById('transactionsContainer');
+        const template = container.querySelector('.transaction-item').cloneNode(true);
+
+        template.querySelectorAll('[name]').forEach(input => {
+            const name = input.getAttribute('name');
+            input.setAttribute('name', name.replace(/\[\d+\]/, `[${transactionCount}]`));
+
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            } else if (input.type !== 'date') {
+                input.value = '';
             }
-        </script>
-    @endpush
+        });
+
+        template.querySelector('.remove-transaction').classList.remove('hidden');
+
+        template.querySelector('.category-select').disabled = true;
+        template.querySelector('.category-select').innerHTML =
+            '<option value="">Select category</option>';
+
+        container.appendChild(template);
+        transactionCount++;
+
+        updateCategoryOptions(template);
+    });
+
+    // Remove transaction block
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-transaction')) {
+            const item = e.target.closest('.transaction-item');
+            if (document.querySelectorAll('.transaction-item').length > 1) {
+                item.remove();
+            } else {
+                alert('You must have at least one transaction');
+            }
+        }
+    });
+</script>
+@endpush
+
+
 @endsection

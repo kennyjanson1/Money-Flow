@@ -117,4 +117,5 @@ class GoalsController extends Controller
         return redirect()->route('goals.index')
             ->with('success', 'Goal canceled.');
     }
+    
 }

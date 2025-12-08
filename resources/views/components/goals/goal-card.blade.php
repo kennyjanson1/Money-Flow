@@ -47,7 +47,7 @@
 @endphp
 
 <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 md:p-5 hover:shadow-md transition-shadow border border-slate-200 dark:border-slate-700 cursor-pointer"
-     onclick="window.location='{{ route('goals.show', $goal->id) }}'">
+     onclick="window.location='{{ route('savings.show', $goal->id) }}'">
     <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
             <div class="{{ $iconBg }} w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center text-xl md:text-2xl flex-shrink-0">
