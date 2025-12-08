@@ -5,6 +5,7 @@
         'transactions' => ['title' => 'Transaction', 'description' => 'View and Manage All Your Transactions'],
         'cashflow' => ['title' => 'Cash Flow', 'description' => 'Monitor Your Income and Expense Trends'],
         'goals' => ['title' => 'Goals', 'description' => 'Track Your Savings Goals and Progress'],
+        'gethelp' => ['title' => 'Get Help', 'description' => 'Find Answers and Contact Support'],
     ];
 
     $currentRoute = request()->route()->getName();

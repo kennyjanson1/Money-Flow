@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Moneta - Money Management Dashboard')</title>
+    <title>@yield('title', 'Casholve - Money Management Dashboard')</title>
 
     <!-- Tailwind CSS (HARUS PERTAMA) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -64,7 +64,7 @@
     </style>
 </head>
 
-<body class="bg-white text-black dark:bg-slate-900 dark:text-white overflow-x-hidden min-h-screen"
+<body class="bg-gray-100 text-black dark:bg-slate-900 dark:text-white overflow-x-hidden min-h-screen"
     x-data="{ sidebarOpen: false }">
     <div class="flex min-h-screen">
         <!-- Sidebar -->

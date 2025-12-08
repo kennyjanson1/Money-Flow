@@ -1,4 +1,4 @@
-<div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-6 bg-white dark:bg-slate-900">
+<div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-6 bg-gray-100 dark:bg-slate-900">
     <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Recent Transaction</h3>
         <div class="flex items-center gap-2">

@@ -8,7 +8,7 @@
             <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <div class="w-4 h-4 bg-white rounded"></div>
             </div>
-            <h1 class="text-xl font-medium text-slate-900 dark:text-slate-100">Moneta</h1>
+            <h1 class="text-xl font-medium text-slate-900 dark:text-slate-100">Casholve</h1>
         </div>
         <button 
             @click="sidebarOpen = false"

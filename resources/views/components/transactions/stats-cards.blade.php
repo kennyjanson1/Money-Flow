@@ -59,7 +59,7 @@
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
     <!-- Total Transactions -->
-    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-white dark:bg-slate-900">
+    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-gray-100 dark:bg-slate-900">
         <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-2">Total Transactions</p>
         <p class="text-xl md:text-2xl text-slate-900 dark:text-slate-100 mb-1">{{ number_format($totalTransactions) }}</p>
         @if($transactionChange != 0)
@@ -72,7 +72,7 @@
     </div>
     
     <!-- Total Income -->
-    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-white dark:bg-slate-900">
+    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-gray-100 dark:bg-slate-900">
         <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-2">Total Income</p>
         <p class="text-xl md:text-2xl text-slate-900 dark:text-slate-100 mb-1">Rp {{ number_format($totalIncome, 0, ',', '.') }}</p>
         @if($incomeChange != 0)
@@ -85,7 +85,7 @@
     </div>
     
     <!-- Total Expenses -->
-    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-white dark:bg-slate-900">
+    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-gray-100 dark:bg-slate-900">
         <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-2">Total Expenses</p>
         <p class="text-xl md:text-2xl text-slate-900 dark:text-slate-100 mb-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</p>
         @if($expenseChange != 0)
@@ -98,7 +98,7 @@
     </div>
     
     <!-- Net Balance -->
-    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-white dark:bg-slate-900">
+    <div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-4 md:p-6 bg-gray-100 dark:bg-slate-900">
         <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-2">Net Balance</p>
         <p class="text-xl md:text-2xl text-slate-900 dark:text-slate-100 mb-1">Rp {{ number_format($netBalance, 0, ',', '.') }}</p>
         <p class="text-sm {{ $netBalance >= 0 ? 'text-green-500' : 'text-red-500' }}">

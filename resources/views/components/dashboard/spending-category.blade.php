@@ -37,7 +37,7 @@
     })->toArray();
 @endphp
 
-<div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-6 bg-white dark:bg-slate-900 h-full">
+<div class="border border-slate-200 dark:border-slate-700 shadow-lg rounded-2xl p-6 bg-gray-100 dark:bg-slate-900 h-full">
     <div class="flex items-start justify-between mb-4">
         <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Spending by Category</h3>
         <button class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1">

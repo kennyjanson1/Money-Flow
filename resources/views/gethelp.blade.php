@@ -4,9 +4,6 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Header -->
-    @include('components.header')
-
     <!-- Alert Messages -->
     @include('components.gethelp.alert-messages')
 
@@ -20,7 +17,7 @@
             @include('components.gethelp.faq-section')
 
             <!-- Video Tutorials -->
-            @include('components.gethelp.video-tutorials')
+            {{-- @include('components.gethelp.video-tutorials') --}}
         </div>
 
         <!-- Sidebar -->
@@ -29,7 +26,7 @@
             @include('components.gethelp.contact-form')
 
             <!-- Quick Links -->
-            @include('components.gethelp.quick-links')
+            {{-- @include('components.gethelp.quick-links') --}}
 
             <!-- Contact Info -->
             @include('components.gethelp.contact-info')

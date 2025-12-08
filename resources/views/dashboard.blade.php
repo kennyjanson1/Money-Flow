@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Moneta')
+@section('title', 'Dashboard - Casholve')
 
 @section('content')
 <!-- Top Section: Balance + Spending -->
