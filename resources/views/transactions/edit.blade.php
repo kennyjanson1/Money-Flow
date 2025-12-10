@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Transaction - Moneta')
+@section('title', 'Edit Transaction - Casholve')
 
 @section('content')
     <div class="max-w-4xl mx-auto space-y-6">
@@ -28,8 +28,8 @@
                     <!-- Type -->
                     <div>
                         <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Type *</label>
-                        <select name="type"
-                            class="transaction-type w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        <select name="type" id="type"
+                            class="transaction-type w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('type') border-red-500 @enderror"
                             required>
                             <option value="">Select type</option>
                             <option value="income" {{ old('type', $transaction->type) == 'income' ? 'selected' : '' }}>Income</option>
@@ -43,8 +43,8 @@
                     <!-- Category -->
                     <div>
                         <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Category *</label>
-                        <select name="category_id"
-                            class="category-select w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        <select name="category_id" id="category_id"
+                            class="category-select w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('category_id') border-red-500 @enderror"
                             required>
                             <option value="">Select category</option>
                             @foreach ($categories as $category)
@@ -63,7 +63,7 @@
                         <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Title *</label>
                         <input type="text" name="title" value="{{ old('title', $transaction->title) }}" 
                             placeholder="e.g., Lunch at restaurant"
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('title') border-red-500 @enderror"
                             required>
                         @error('title')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -72,10 +72,10 @@
 
                     <!-- Amount -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount *</label>
-                        <input type="number" name="amount" value="{{ old('amount', $transaction->amount) }}" 
-                            step="0.01" min="0" placeholder="0.00"
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount (Rp) *</label>
+                        <input type="text" name="amount" id="amount" value="{{ old('amount', $transaction->amount) }}" 
+                            inputmode="numeric" placeholder="100.000"
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('amount') border-red-500 @enderror"
                             required>
                         @error('amount')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -86,7 +86,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Date *</label>
                         <input type="date" name="date" value="{{ old('date', $transaction->date->format('Y-m-d')) }}"
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('date') border-red-500 @enderror"
                             required>
                         @error('date')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -97,7 +97,7 @@
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Description (Optional)</label>
                         <textarea name="description" rows="3" placeholder="Add notes..."
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('description', $transaction->description) }}</textarea>
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('description') border-red-500 @enderror">{{ old('description', $transaction->description) }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -131,6 +131,46 @@
 
     @push('scripts')
         <script>
+            // IDR Formatting
+            function formatIDR(value) {
+                const number = value.replace(/\D/g, '');
+                if (number === '') return '';
+                return new Intl.NumberFormat('id-ID').format(number);
+            }
+
+            function handleInputFormat(input) {
+                input.addEventListener('input', function(e) {
+                    const cursorPosition = this.selectionStart;
+                    const oldValue = this.value;
+                    const oldLength = oldValue.length;
+                    
+                    const formatted = formatIDR(this.value);
+                    this.value = formatted;
+                    
+                    const newLength = formatted.length;
+                    const diff = newLength - oldLength;
+                    const newCursorPosition = cursorPosition + diff;
+                    this.setSelectionRange(newCursorPosition, newCursorPosition);
+                });
+
+                const form = input.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        input.value = input.value.replace(/\./g, '');
+                    });
+                }
+            }
+
+            // Format amount on page load
+            const amountInput = document.querySelector('#amount');
+            if (amountInput) {
+                if (amountInput.value) {
+                    amountInput.value = formatIDR(amountInput.value);
+                }
+                handleInputFormat(amountInput);
+            }
+
+            // Delete Button Handler
             document.getElementById('deleteBtn').addEventListener('click', function() {
                 if (confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) {
                     document.getElementById('deleteForm').submit();

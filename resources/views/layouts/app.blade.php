@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html x-data="{
-    darkMode: localStorage.getItem('theme') === 'dark'
-}" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', value => {
+    darkMode: localStorage.getItem('theme') === 'dark'}" :class="{ 'dark': darkMode }" 
+    x-init="$watch('darkMode', value => {
     localStorage.setItem('theme', value ? 'dark' : 'light')
-})">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <head>
     <meta charset="UTF-8">

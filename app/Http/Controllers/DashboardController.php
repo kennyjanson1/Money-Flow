@@ -7,6 +7,7 @@ use App\Models\SavingsPlan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -245,6 +246,61 @@ class DashboardController extends Controller
             'expenseChange'   => $expenseChange,
 
             'transactions' => $transactions,
+        ]);
+    }
+
+    /**
+     * Get spending data by category for AJAX request (Spending Chart)
+     */
+    public function getSpendingData(Request $request)
+    {
+        $range = $request->get('range', 'this_month');
+        $userId = auth()->id();
+
+        // Tentukan tanggal awal & akhir berdasarkan range
+        if ($range === 'this_week') {
+            $startDate = Carbon::now()->subDays(6)->startOfDay();
+            $endDate = Carbon::now()->endOfDay();
+        } elseif ($range === 'this_year') {
+            $startDate = Carbon::now()->startOfYear();
+            $endDate = Carbon::now()->endOfYear();
+        } else {
+            // default this_month
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
+        }
+
+        // Query - sama seperti di method index()
+        $categorySpending = Transaction::select(
+                'categories.name as category',
+                DB::raw('SUM(transactions.amount) as total'),
+                'categories.color'
+            )
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->where('transactions.user_id', $userId)
+            ->where('transactions.type', 'expense')
+            ->whereBetween('transactions.date', [$startDate, $endDate])
+            ->groupBy('categories.name', 'categories.color')
+            ->orderByDesc('total')
+            ->get();
+
+        $totalSpending = $categorySpending->sum('total');
+
+        // Format data untuk JSON response
+        $categories = $categorySpending->map(function($cat) use ($totalSpending) {
+            return [
+                'name' => $cat->category,
+                'amount' => (float) $cat->total,
+                'percentage' => $totalSpending > 0
+                    ? round(($cat->total / $totalSpending) * 100, 1)
+                    : 0,
+                'color' => $cat->color,
+            ];
+        })->toArray();
+
+        return response()->json([
+            'totalSpending' => (float) $totalSpending,
+            'categories' => $categories,
         ]);
     }
 }

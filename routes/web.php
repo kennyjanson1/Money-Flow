@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/spending-data', [DashboardController::class, 'getSpendingData'])->name('dashboard.spending-data');
     
     
     /*
@@ -78,19 +79,24 @@ Route::middleware('auth')->group(function () {
     })->name('cashflow');
     
     // Cashflow data API for chart
-    Route::get('/cashflow/data', [CashflowController::class, 'getData'])->name('cashflow.data');
+    Route::get('/cashflow/data', [CashflowController::class, 'getData'])
+    ->middleware('auth')
+    ->name('cashflow.data');
     
     /*
     |--------------------------------------------------------------------------
     | Goals Management (formerly Savings Plans)
     |--------------------------------------------------------------------------
     */
-    // Main goals routes (CRUD)
-    Route::resource('goals', GoalsController::class);
-    
-    // Additional actions
-    Route::post('goals/{savingsPlan}/complete', [GoalsController::class, 'complete'])->name('goals.complete');
-    Route::post('goals/{savingsPlan}/cancel', [GoalsController::class, 'cancel'])->name('goals.cancel');
+    // Main goals routes (CRUD) - menggunakan parameter 'savingsPlan'
+    Route::resource('goals', GoalsController::class)->parameters([
+        'goals' => 'savingsPlan'
+    ]);
+
+    // Additional goal actions
+    Route::patch('goals/{savingsPlan}/complete', [GoalsController::class, 'complete'])->name('goals.complete');
+    Route::patch('goals/{savingsPlan}/cancel', [GoalsController::class, 'cancel'])->name('goals.cancel');
+    Route::post('goals/{savingsPlan}/savings', [GoalsController::class, 'addSavings'])->name('goals.add-savings');
     
 
     /*

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Transactions - Moneta')
+@section('title', 'Add Transactions - Casholve')
 
 @section('content')
     <div class="max-w-4xl mx-auto space-y-6">
@@ -74,10 +74,10 @@
 
                             <!-- Amount -->
                             <div>
-                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount *</label>
-                                <input type="number" name="transactions[0][amount]" step="0.01" min="0"
-                                    placeholder="0.00"
-                                    class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                <label class="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Amount (Rp) *</label>
+                                <input type="text" name="transactions[0][amount]" inputmode="numeric"
+                                    placeholder="100.000"
+                                    class="amount-input w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     required>
                             </div>
 
@@ -127,18 +127,41 @@
 @push('scripts')
 <script>
     // ---------------------------
+    // IDR CURRENCY FORMATTING
+    // ---------------------------
+
+    function formatIDR(value) {
+        const number = value.replace(/\D/g, '');
+        if (number === '') return '';
+        return new Intl.NumberFormat('id-ID').format(number);
+    }
+
+    function handleAmountInput(input) {
+        input.addEventListener('input', function(e) {
+            const cursorPosition = this.selectionStart;
+            const oldValue = this.value;
+            const oldLength = oldValue.length;
+            
+            const formatted = formatIDR(this.value);
+            this.value = formatted;
+            
+            const newLength = formatted.length;
+            const diff = newLength - oldLength;
+            const newCursorPosition = cursorPosition + diff;
+            this.setSelectionRange(newCursorPosition, newCursorPosition);
+        });
+    }
+
+    // ---------------------------
     // CATEGORY OPTIONS FROM DATABASE
     // ---------------------------
 
-    // Semua kategori dari DB dikirim dari controller
     const allCategories = @json($categories);
 
-    // Filter kategori berdasarkan type
     function getCategoriesByType(type) {
         return allCategories.filter(cat => cat.type === type);
     }
 
-    // Function to update category dropdown based on selected type
     function updateCategoryOptions(container) {
         const typeSelect = container.querySelector('.transaction-type');
         const categorySelect = container.querySelector('.category-select');
@@ -167,6 +190,18 @@
     // Initialize first transaction block
     updateCategoryOptions(document.querySelector('.transaction-item'));
 
+    // Initialize IDR formatting for all amount inputs
+    document.querySelectorAll('.amount-input').forEach(input => {
+        handleAmountInput(input);
+    });
+
+    // Before form submit, remove dots from all amount inputs
+    document.getElementById('bulkTransactionForm').addEventListener('submit', function() {
+        document.querySelectorAll('.amount-input').forEach(input => {
+            input.value = input.value.replace(/\./g, '');
+        });
+    });
+
     // CLONING SYSTEM
     let transactionCount = 1;
 
@@ -194,6 +229,10 @@
         container.appendChild(template);
         transactionCount++;
 
+        // Initialize formatting for new amount input
+        const newAmountInput = template.querySelector('.amount-input');
+        handleAmountInput(newAmountInput);
+
         updateCategoryOptions(template);
     });
 
@@ -210,6 +249,5 @@
     });
 </script>
 @endpush
-
 
 @endsection
