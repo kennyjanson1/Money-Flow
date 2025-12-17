@@ -4,7 +4,7 @@ A comprehensive Laravel-based web application for personal finance management, b
 
 ## 🌐 Live Deployments
 
-- **Application**: [Deployed on InfinityFree](https://your-infinityfree-url.com/)
+- **Application**: [Deployed on InfinityFree](https://casholve.great-site.net/)
 
 ## 🚀 Features
 
