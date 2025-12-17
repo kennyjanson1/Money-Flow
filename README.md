@@ -1,59 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Money Management App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based web application for personal finance management, built with Inertia.js for a modern single-page application experience and styled with Tailwind CSS.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Dashboard
+- **Financial Overview**: Total balance, income, and expenses summary
+- **Cashflow Charts**: Visualize income and expenses over time (this week, this month, this year)
+- **Spending Categories**: Breakdown of expenses by category with interactive charts
+- **Recent Transactions**: Quick view of latest financial activities
+- **Savings Progress**: Track progress on active savings goals
+- **Month-over-Month Comparison**: Compare current month with previous month performance
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Transactions Management
+- **CRUD Operations**: Create, read, update, and delete transactions
+- **Bulk Import**: Add multiple transactions at once
+- **Soft Delete**: Restore accidentally deleted transactions
+- **Categorization**: Assign transactions to custom categories
+- **Filtering**: Filter by type (income/expense), date ranges, categories
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Categories
+- **Custom Categories**: Create and manage expense/income categories
+- **Default Categories**: Pre-loaded common categories
+- **Color Coding**: Visual distinction with category colors
 
-## Learning Laravel
+### Cashflow Analysis
+- **Trend Visualization**: Charts showing financial trends
+- **Expense Breakdown**: Detailed analysis of spending patterns
+- **Monthly Summary**: Comprehensive monthly financial reports
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Goals (Savings Plans)
+- **Goal Setting**: Create savings goals with target amounts and deadlines
+- **Progress Tracking**: Monitor savings progress with visual indicators
+- **Savings Transactions**: Record contributions towards goals
+- **Goal Management**: Complete, cancel, or modify goals
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Account Management
+- **Profile Settings**: Update personal information
+- **Password Change**: Secure password management
+- **Account Deletion**: Option to delete account with data cleanup
 
-## Laravel Sponsors
+### Get Help
+- **FAQ Section**: Frequently asked questions
+- **Contact Form**: Direct support communication
+- **Video Tutorials**: Educational content for app usage
+- **Quick Links**: Helpful resources and guides
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Technology Stack
 
-### Premium Partners
+- **Backend**: Laravel 12 (PHP 8.2+)
+- **Frontend**: Inertia.js with Vue.js
+- **Styling**: Tailwind CSS
+- **Database**: MySQL (with migrations and seeders)
+- **Authentication**: Laravel Sanctum
+- **Build Tool**: Vite
+- **Deployment**: IfinityFree
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Setup Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd money-management
+   ```
+
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Environment configuration**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   Configure your database and other settings in `.env`
+
+5. **Database setup**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+6. **Build assets**
+   ```bash
+   npm run build
+   ```
+
+7. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+
+8. **For development with hot reload**
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+1. **Registration**: Create a new account or login with existing credentials
+2. **Dashboard**: View your financial overview and recent activities
+3. **Add Transactions**: Record income and expenses with categories
+4. **Set Goals**: Create savings goals and track progress
+5. **Analyze Cashflow**: Use charts and reports to understand spending patterns
+6. **Manage Account**: Update profile and settings
+
+## API Endpoints
+
+The application provides several API endpoints for data retrieval:
+
+- `/api/dashboard/spending-data`: Category spending data for charts
+- `/api/cashflow/data`: Cashflow data for visualization
+- Various CRUD endpoints for transactions, goals, and categories
+
+## Database Schema
+
+### Key Tables
+- `users`: User accounts
+- `transactions`: Financial transactions
+- `categories`: Transaction categories
+- `savings_plans`: Savings goals
+- `savings_transactions`: Contributions to savings goals
+
+## Deployment
+
+### InfinityFree Hosting
+The application is deployed and accessible at: [Your InfinityFree URL here]
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the LICENSE file for details.
+
