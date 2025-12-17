@@ -2,146 +2,180 @@
 
 A comprehensive Laravel-based web application for personal finance management, built with Inertia.js for a modern single-page application experience and styled with Tailwind CSS.
 
-## Features
+## 🌐 Live Deployments
 
-### Dashboard
-- **Financial Overview**: Total balance, income, and expenses summary
-- **Cashflow Charts**: Visualize income and expenses over time (this week, this month, this year)
-- **Spending Categories**: Breakdown of expenses by category with interactive charts
-- **Recent Transactions**: Quick view of latest financial activities
-- **Savings Progress**: Track progress on active savings goals
-- **Month-over-Month Comparison**: Compare current month with previous month performance
+- **Application**: [Deployed on InfinityFree](https://your-infinityfree-url.com/)
 
-### Transactions Management
-- **CRUD Operations**: Create, read, update, and delete transactions
-- **Bulk Import**: Add multiple transactions at once
-- **Soft Delete**: Restore accidentally deleted transactions
-- **Categorization**: Assign transactions to custom categories
-- **Filtering**: Filter by type (income/expense), date ranges, categories
+## 🚀 Features
 
-### Categories
-- **Custom Categories**: Create and manage expense/income categories
-- **Default Categories**: Pre-loaded common categories
-- **Color Coding**: Visual distinction with category colors
+- **Financial Dashboard**: Real-time overview of balance, income, and expenses
+- **Transaction Management**: Full CRUD operations with categorization and filtering
+- **Cashflow Analysis**: Interactive charts and trend visualization
+- **Savings Goals**: Set and track progress on financial objectives
+- **Category Management**: Custom and default categories with color coding
+- **Account Management**: Profile settings, password change, and secure account deletion
+- **Get Help Section**: FAQ, contact form, and video tutorials
 
-### Cashflow Analysis
-- **Trend Visualization**: Charts showing financial trends
-- **Expense Breakdown**: Detailed analysis of spending patterns
-- **Monthly Summary**: Comprehensive monthly financial reports
+## 🏗️ Project Structure
 
-### Goals (Savings Plans)
-- **Goal Setting**: Create savings goals with target amounts and deadlines
-- **Progress Tracking**: Monitor savings progress with visual indicators
-- **Savings Transactions**: Record contributions towards goals
-- **Goal Management**: Complete, cancel, or modify goals
+```
+money-management/
+├── app/                          # Laravel Application
+│   ├── Http/Controllers/         # Controllers for handling requests
+│   ├── Models/                   # Eloquent models
+│   ├── Policies/                 # Authorization policies
+│   └── Providers/                # Service providers
+├── database/                     # Database migrations and seeders
+│   ├── migrations/               # Database schema migrations
+│   └── seeders/                  # Database seeders
+├── public/                       # Public assets
+├── resources/                    # Views, CSS, and JS
+│   ├── css/                      # Stylesheets
+│   ├── js/                       # JavaScript files
+│   └── views/                    # Blade templates
+├── routes/                       # Route definitions
+├── storage/                      # File storage
+├── tests/                        # Test files
+├── bootstrap/                    # Laravel bootstrap files
+├── config/                       # Configuration files
+├── composer.json                 # PHP dependencies
+├── package.json                  # Node.js dependencies
+└── README.md                     # This file
+```
 
-### Account Management
-- **Profile Settings**: Update personal information
-- **Password Change**: Secure password management
-- **Account Deletion**: Option to delete account with data cleanup
+## 🛠️ Technologies Used
 
-### Get Help
-- **FAQ Section**: Frequently asked questions
-- **Contact Form**: Direct support communication
-- **Video Tutorials**: Educational content for app usage
-- **Quick Links**: Helpful resources and guides
+### Backend
+- **Laravel**: High-performance PHP framework
+- **MySQL**: Relational database with migrations and seeders
+- **Laravel Sanctum**: API authentication
+- **Inertia.js**: Modern monolith architecture
 
-## Technology Stack
+### Frontend
+- **Vue.js**: Reactive JavaScript framework
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vite**: Fast build tool and development server
 
-- **Backend**: Laravel 12 (PHP 8.2+)
-- **Frontend**: Inertia.js with Vue.js
-- **Styling**: Tailwind CSS
-- **Database**: MySQL (with migrations and seeders)
-- **Authentication**: Laravel Sanctum
-- **Build Tool**: Vite
-- **Deployment**: IfinityFree
+## 🚀 Installation & Setup
 
-### Setup Steps
+### 1. Clone the Repository
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd money-management
-   ```
+```bash
+git clone <repository-url>
+cd money-management
+```
 
-2. **Install PHP dependencies**
-   ```bash
-   composer install
-   ```
+### 2. Backend Setup
 
-3. **Install Node.js dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+# Install PHP dependencies
+composer install
 
-4. **Environment configuration**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-   Configure your database and other settings in `.env`
+# Environment configuration
+cp .env.example .env
+php artisan key:generate
+```
 
-5. **Database setup**
-   ```bash
-   php artisan migrate
-   php artisan db:seed
-   ```
+Configure your database and other settings in `.env`
 
-6. **Build assets**
-   ```bash
-   npm run build
-   ```
+### 3. Database Setup
 
-7. **Start the development server**
-   ```bash
-   php artisan serve
-   ```
+```bash
+# Run migrations
+php artisan migrate
 
-8. **For development with hot reload**
-   ```bash
-   npm run dev
-   ```
+# Seed the database
+php artisan db:seed
+```
 
-## Usage
+### 4. Frontend Setup
 
-1. **Registration**: Create a new account or login with existing credentials
-2. **Dashboard**: View your financial overview and recent activities
-3. **Add Transactions**: Record income and expenses with categories
-4. **Set Goals**: Create savings goals and track progress
-5. **Analyze Cashflow**: Use charts and reports to understand spending patterns
-6. **Manage Account**: Update profile and settings
+```bash
+# Install Node.js dependencies
+npm install
 
-## API Endpoints
+# Build assets
+npm run build
+```
 
-The application provides several API endpoints for data retrieval:
+## ▶️ Running the Application
 
-- `/api/dashboard/spending-data`: Category spending data for charts
-- `/api/cashflow/data`: Cashflow data for visualization
-- Various CRUD endpoints for transactions, goals, and categories
+### Local Development
 
-## Database Schema
+#### Start the Development Server
 
-### Key Tables
-- `users`: User accounts
-- `transactions`: Financial transactions
-- `categories`: Transaction categories
-- `savings_plans`: Savings goals
-- `savings_transactions`: Contributions to savings goals
+```bash
+# Start Laravel server
+php artisan serve
+```
 
-## Deployment
+The backend will start on `http://localhost:8000`
 
-### InfinityFree Hosting
-The application is deployed and accessible at: [Your InfinityFree URL here]
+#### Start Frontend Development Server
 
-## Contributing
+```bash
+# For development with hot reload
+npm run dev
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+The frontend will start on `http://localhost:5173`
 
-## License
+### Production Deployment
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+#### InfinityFree Hosting
+1. Upload the project files to your InfinityFree account
+2. Configure the database settings in `.env`
+3. Run migrations and seeders
+4. Build assets with `npm run build`
+5. The app will be available at your InfinityFree URL
+
+## 📖 Usage
+
+1. **Register/Login**: Create a new account or sign in with existing credentials
+2. **Dashboard Overview**: View your financial summary and recent activities
+3. **Manage Transactions**: Add, edit, or delete income and expense records
+4. **Set Savings Goals**: Create and track progress on financial objectives
+5. **Analyze Spending**: Use charts to understand cashflow patterns
+6. **Customize Categories**: Create and manage transaction categories
+7. **Account Settings**: Update profile and manage account preferences
+
+## 🎯 How It Works
+
+### Financial Tracking Pipeline
+1. **User Registration**: Secure account creation with Laravel Sanctum
+2. **Transaction Input**: Record income/expenses with categorization
+3. **Data Processing**: Automatic calculations and aggregations
+4. **Visualization**: Real-time charts and analytics display
+5. **Goal Tracking**: Progress monitoring with visual indicators
+6. **Reporting**: Comprehensive financial reports and insights
+
+### Data Management
+- **CRUD Operations**: Full create, read, update, delete functionality
+- **Soft Deletes**: Restore accidentally deleted transactions
+- **Filtering**: Advanced filtering by type, date, and category
+- **Bulk Operations**: Import multiple transactions efficiently
+
+## 🔧 Configuration
+
+### Environment Variables
+Create `.env` file in the root directory:
+```
+APP_NAME="Money Management App"
+APP_ENV=local
+APP_KEY=your-generated-key
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+## 👨‍💻 Author
+
+- Developed by Kenny Janson
+- Project: Money Management App
 
